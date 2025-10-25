@@ -6,7 +6,7 @@ Welcome to the one-stop hub that connects **curious newcomers** with **beginner-
 
 Our mission is simple:
 
-**🔓 Break down barriers → 🛠️ empower first-time contributors → 🌍 grow the decentralised ecosystem.**
+**🔓 Break down barriers → 🛠️ empower first-time contributors → 🌍 grow the decentralized ecosystem.**
 
 [🌐 **Live Site**](https://good-first-issues-three.vercel.app/)
 
