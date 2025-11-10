@@ -285,12 +285,12 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-background dark:bg-gradient-to-b dark:from-[#0c0c0c] dark:to-background">
       <div className="fixed top-4 left-4 z-10 text-xs text-muted-foreground dark:text-muted-foreground/80">
         <a
-          href="https://github.com/natalie-a-1"
+          href="https://github.com/lucci-xyz"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-primary transition-colors flex items-center gap-1"
         >
-          Made with <span className="text-red-500">❤️</span> by Natalie
+          Made with <span className="text-red-500">❤️</span> by Lucci Labs
         </a>
       </div>
       
