@@ -58,14 +58,45 @@ The blockchain space thrives on **open collaboration**. Yet, newcomers often str
 
 ## 🏁 Quick Start (devs at heart)
 
+### Local Development (No Secrets Required!)
+
+Anyone can contribute without needing access to production secrets. The app automatically uses local data when Vercel KV is not configured:
+
 ```bash
 pnpm install        # grab dependencies
 pnpm dev            # local server on http://localhost:3000
 ```
 
-Then open the site, pick an issue, and start coding! 💻✨
+**That's it!** The app will automatically use the pre-populated data in `public/issues.json` and `public/last-update.json` when no KV credentials are found.
 
-To refresh the issue list:
+### Optional: Environment Configuration
+
+If you want to customize your local setup, copy the example environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` to configure:
+- `USE_LOCAL_DATA=true` — Force local file mode (even if KV vars are present)
+- `GITHUB_TOKEN` — (Optional) Increase GitHub API rate limits from 60 to 5,000 requests/hour
+
+### How It Works
+
+The app intelligently falls back to local data:
+
+1. **When KV is configured** (production): Reads issues from Vercel KV store
+2. **When KV is NOT configured** (local dev): Reads issues from `public/issues.json`
+3. **On KV error**: Automatically falls back to local files
+
+This means contributors can:
+- Run the app locally without any secrets ✅
+- Test UI changes and filters ✅
+- Add new features without production access ✅
+
+### Updating the Issue List (Optional)
+
+To fetch fresh issues from GitHub (requires no secrets, but rate-limited):
 
 ```bash
 pnpm run update-issues
@@ -83,23 +114,37 @@ This project is configured for deployment on Vercel. To deploy:
 
 ## Environment Variables
 
+### For Local Development (Optional)
+
+See `.env.example` for all available options. Most common:
+
+- `USE_LOCAL_DATA=true` — Force use of local JSON files instead of KV (default behavior when KV is not configured)
+- `GITHUB_TOKEN` — (Optional) Increase GitHub API rate limits when fetching issues
+
+### For Production Deployment
+
 The following environment variables need to be set in your Vercel project (Settings > Environment Variables):
 
-- `CRON_SECRET`: A secret key you generate to secure the cron job API endpoint. This is used in the `Authorization: Bearer <secret>` header.
-- `GITHUB_TOKEN`: (Optional, but Recommended) A GitHub personal access token to increase rate limits when fetching issues from the GitHub API.
-- Vercel KV Environment Variables: When you connect a Vercel KV store, Vercel will automatically add the necessary KV store connection variables (e.g., `KV_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`).
+- `CRON_SECRET` — A secret key to secure the cron job API endpoint (used in `Authorization: Bearer <secret>` header)
+- `GITHUB_TOKEN` — (Optional, but Recommended) GitHub personal access token to increase rate limits
+- Vercel KV Environment Variables — When you connect a Vercel KV store, Vercel automatically adds: `KV_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`
 
-## Cron Job
+## Cron Job (Production)
 
-This project includes a cron job that automatically updates the GitHub issues. The cron job:
-1. Is configured in `vercel.json` to run on a schedule (e.g., daily).
-2. Calls the `/api/cron/update-issues` endpoint.
-3. Fetches the latest 'good first issues' from various repositories using the GitHub API.
-4. Saves the fetched issues to a Vercel KV store (key: `all_issues_data`).
-5. Saves the update timestamp to Vercel KV (key: `last_cron_update_timestamp`).
+This project includes a cron job that automatically updates the GitHub issues in production:
 
-The API route `/api/get-issues` retrieves the issues from Vercel KV for display on the frontend.
-The API route `/api/get-last-update` retrieves the last update timestamp from Vercel KV.
+1. Configured in `vercel.json` to run on a schedule (e.g., daily)
+2. Calls the `/api/cron/update-issues` endpoint
+3. Fetches the latest 'good first issues' from various repositories using the GitHub API
+4. Saves the fetched issues to Vercel KV store (key: `all_issues_data`)
+5. Saves the update timestamp to Vercel KV (key: `last_cron_update_timestamp`)
+
+### API Routes
+
+- `/api/get-issues` — Retrieves issues from KV (production) or `public/issues.json` (local/fallback)
+- `/api/get-last-update` — Retrieves update timestamp from KV (production) or `public/last-update.json` (local/fallback)
+
+Both routes automatically fall back to local JSON files when Vercel KV is unavailable, ensuring the app works seamlessly in local development.
 
 ---
 
