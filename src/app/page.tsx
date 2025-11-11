@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import type { SortOption } from '@/types/quest';
+type SortOption = 'newest' | 'oldest' | 'stars';
 
 export default function HomePage() {
   const [bounties, setBounties] = useState<Quest[]>([]);
