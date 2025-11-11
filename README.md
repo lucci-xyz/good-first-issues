@@ -1,8 +1,8 @@
-# Quests
+# Bounties
 
-> Discover open source contributions across thousands of projects.
+> The economic layer for open source.
 
-A minimal platform for finding issues, bounties, and contribution opportunities in open source. Built by [Lucci Labs](https://luccilabs.xyz).
+A minimal platform for discovering paid contribution opportunities in open source. Built by [Lucci Labs](https://luccilabs.xyz).
 
 **[Live Site →](https://good-first-issues-three.vercel.app/)**
 
@@ -10,7 +10,7 @@ A minimal platform for finding issues, bounties, and contribution opportunities 
 
 ## Overview
 
-Quests helps developers discover contribution opportunities through:
+Bounties helps developers discover contribution opportunities through:
 
 - **Smart Filtering** – By language, issue type, industry, and bounty status
 - **Real-time Search** – Instant filtering across thousands of issues
@@ -143,4 +143,4 @@ MIT
 
 ---
 
-Built with care by [Lucci Labs](https://luccilabs.xyz) | [Discord](https://discord.gg/MWxWzRVSx) | [X](https://x.com/LucciLabs)
+By [Lucci Labs](https://luccilabs.xyz) | [Discord](https://discord.gg/MWxWzRVSx) | [X](https://x.com/LucciLabs)

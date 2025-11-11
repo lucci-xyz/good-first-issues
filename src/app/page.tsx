@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Issue, Quest, issueToQuest } from '@/types/quest';
-import { QuestCard } from '@/components/quests/QuestCard';
-import { SearchInput } from '@/components/quests/SearchInput';
+import { QuestCard } from '@/components/bounties/QuestCard';
+import { SearchInput } from '@/components/bounties/SearchInput';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -16,7 +16,7 @@ import {
 type SortOption = 'newest' | 'oldest' | 'stars';
 
 export default function HomePage() {
-  const [quests, setQuests] = useState<Quest[]>([]);
+  const [bounties, setBounties] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
@@ -25,33 +25,33 @@ export default function HomePage() {
   const [onlyBounties, setOnlyBounties] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('newest');
 
-  // Fetch quests
+  // Fetch bounties
   useEffect(() => {
-    const fetchQuests = async () => {
+    const fetchBounties = async () => {
       try {
         const response = await fetch('/api/get-issues');
         if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
         const data = await response.json() as { issues: Issue[] };
-        setQuests(data.issues.map(issueToQuest));
+        setBounties(data.issues.map(issueToQuest));
       } catch (e) {
-        console.error('Error fetching quests:', e);
+        console.error('Error fetching bounties:', e);
       } finally {
         setLoading(false);
       }
     };
-    fetchQuests();
+    fetchBounties();
   }, []);
 
   // Available options
   const availableLanguages = useMemo(() => {
     const languages = new Set<string>();
-    quests.forEach(q => q.language && languages.add(q.language));
+    bounties.forEach(q => q.language && languages.add(q.language));
     return Array.from(languages).sort();
-  }, [quests]);
+  }, [bounties]);
 
   const issueTypes = useMemo(() => {
     const types = new Set<string>();
-    quests.forEach(q => {
+    bounties.forEach(q => {
       q.labels?.forEach(label => {
         const lower = label.toLowerCase();
         if (lower.includes('good first issue')) types.add('good first issue');
@@ -62,11 +62,11 @@ export default function HomePage() {
       });
     });
     return Array.from(types).sort();
-  }, [quests]);
+  }, [bounties]);
 
   const industries = useMemo(() => {
     const ind = new Set<string>();
-    quests.forEach(q => {
+    bounties.forEach(q => {
       q.tags?.forEach(tag => {
         const lower = tag.toLowerCase();
         // Map tags to industries
@@ -81,11 +81,11 @@ export default function HomePage() {
       });
     });
     return Array.from(ind).sort();
-  }, [quests]);
+  }, [bounties]);
 
-  // Filter and sort quests
-  const filteredAndSortedQuests = useMemo(() => {
-    let result = [...quests];
+  // Filter and sort bounties
+  const filteredAndSortedBounties = useMemo(() => {
+    let result = [...bounties];
 
     // Search
     if (searchQuery) {
@@ -148,7 +148,7 @@ export default function HomePage() {
     });
 
     return result;
-  }, [quests, searchQuery, selectedIssueTypes, selectedLanguages, selectedIndustries, onlyBounties, sortBy]);
+  }, [bounties, searchQuery, selectedIssueTypes, selectedLanguages, selectedIndustries, onlyBounties, sortBy]);
 
   const toggleFilter = (value: string, current: string[], setter: (val: string[]) => void) => {
     setter(current.includes(value) ? current.filter(v => v !== value) : [...current, value]);
@@ -177,7 +177,7 @@ export default function HomePage() {
                 <SearchInput
                   value={searchQuery}
                   onChange={setSearchQuery}
-                  placeholder="Search projects or issues..."
+                  placeholder="Search bounties..."
                 />
               </div>
               <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
@@ -276,18 +276,18 @@ export default function HomePage() {
 
             {/* Results Count */}
             <div className="text-sm text-muted-foreground mb-6">
-              {loading ? 'Loading...' : `${filteredAndSortedQuests.length} quests`}
+              {loading ? 'Loading...' : `${filteredAndSortedBounties.length} bounties`}
             </div>
 
-            {/* Quest List */}
+            {/* Bounty List */}
             {loading ? (
               <div className="flex items-center justify-center py-20">
                 <div className="text-muted-foreground">Loading...</div>
               </div>
-            ) : filteredAndSortedQuests.length === 0 ? (
+            ) : filteredAndSortedBounties.length === 0 ? (
               <div className="flex items-center justify-center py-20">
                 <div className="text-center">
-                  <p className="text-muted-foreground mb-4">No quests found</p>
+                  <p className="text-muted-foreground mb-4">No bounties found</p>
                   <Button variant="outline" onClick={clearAllFilters}>
                     Clear filters
                   </Button>
@@ -295,7 +295,7 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {filteredAndSortedQuests.map(quest => (
+                {filteredAndSortedBounties.map(quest => (
                   <QuestCard key={quest.id} quest={quest} />
                 ))}
               </div>

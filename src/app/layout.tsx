@@ -13,8 +13,8 @@ const inter = Inter({
 
 // Updated metadata for the specific application
 export const metadata: Metadata = {
-  title: 'Quests - Discover Open Source Contributions',
-  description: 'Find good first issues, bounties, and contribution opportunities across open source projects. Start contributing today.'
+  title: 'Bounties - The Economic Layer for Open Source',
+  description: 'Discover paid open source contributions. Find issues, earn bounties, and get paid instantly for your work.'
 }
 
 export default function RootLayout({
