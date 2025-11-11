@@ -4,7 +4,7 @@
 
 A minimal platform for discovering paid contribution opportunities in open source. Built by [Lucci Labs](https://luccilabs.xyz).
 
-**[Live Site →](https://good-first-issues-three.vercel.app/)**
+**[Live Site →](https://bounties.luccilabs.xyz)**
 
 ---
 
