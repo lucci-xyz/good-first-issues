@@ -1,164 +1,146 @@
-# ✨ **Crypto & Web3 Good First Issues**
+# Quests
 
-> "The best way to learn is by **building together**." — every open-source maintainer ever
+> Discover open source contributions across thousands of projects.
 
-Welcome to the one-stop hub that connects **curious newcomers** with **beginner-friendly issues** from the most exciting projects in Crypto, Web3, Blockchain and DeFi.
+A minimal platform for finding issues, bounties, and contribution opportunities in open source. Built by [Lucci Labs](https://luccilabs.xyz).
 
-Our mission is simple:
-
-**🔓 Break down barriers → 🛠️ empower first-time contributors → 🌍 grow the decentralized ecosystem.**
-
-[🌐 **Live Site**](https://good-first-issues-three.vercel.app/)
+**[Live Site →](https://good-first-issues-three.vercel.app/)**
 
 ---
 
-## 🤔 Why this matters
+## Overview
 
-The blockchain space thrives on **open collaboration**. Yet, newcomers often struggle to find a welcoming starting point. By surfacing "good first issues" from dozens of repositories, this project:
+Quests helps developers discover contribution opportunities through:
 
-1. **Democratises opportunity** — anyone can contribute, regardless of experience or background.
-2. **Accelerates learning** — tackling real issues beats any tutorial or course.
-3. **Strengthens projects** — maintainers receive fresh perspectives & energy.
-4. **Builds community** — contributions create bonds that last well beyond a single pull-request.
-
-> Small PRs today → Massive protocol upgrades tomorrow.
+- **Smart Filtering** – By language, issue type, industry, and bounty status
+- **Real-time Search** – Instant filtering across thousands of issues
+- **Good First Issues** – Curated entry points for newcomers
+- **BountyPay Integration** – Find paid contribution opportunities (coming soon)
 
 ---
 
-## 🌐 What you'll find here
+## Architecture
 
-🎯 **Curated Issue Feed**  – A living list of open GitHub issues labelled "good first issue", filtered exclusively for blockchain-related repositories.
-
-🔍 **Smart Filters** – Search by tags (smart-contracts, cryptography, docs…)
-
-💫 **Zero Barrier** – No login, no sign-up. Just pick an issue & start hacking.
-
----
-
-## 🫂 Who is this for?
-
-| Profile | How we help |
-|---------|-------------|
-| **Students & Learners** | Get real-world blockchain experience for your résumé. |
-| **Bootcamp Grads** | Transition from tutorials to production code. |
-| **Experienced Devs new to Web3** | Apply your skills to decentralised tech without the steep ramp-up. |
-| **Protocol Maintainers** | Attract fresh contributors & visibility for your project. |
-
----
-
-## 🤝 Join the Movement
-
-1. **Contribute** – Found an issue that fits? Open a PR to add the repo or improve the UI.
-2. **Share** – Tweet your first PR & tag `#goodfirstweb3`, inspire others!
-3. **Sponsor** – Your brand can power the next wave of blockchain builders.
-
-> Every contribution – no matter how small – pushes the decentralised future forward.
-
----
-
-## 🏁 Quick Start (devs at heart)
-
-### Local Development (No Secrets Required!)
-
-Anyone can contribute without needing access to production secrets. The app automatically uses local data when Vercel KV is not configured:
-
-```bash
-pnpm install        # grab dependencies
-pnpm dev            # local server on http://localhost:3000
+```
+/src
+  /app
+    /api
+      /get-issues       # Fetches issues from KV or local JSON
+      /get-last-update  # Returns last sync timestamp
+      /cron             # Updates issues from GitHub API
+    page.tsx            # Main quest browser
+    layout.tsx          # Navigation and theme provider
+  /components
+    /quests             # Quest cards, filters, search
+    /ui                 # shadcn/ui components
+  /types
+    quest.ts            # Issue → Quest type mapping
+  /lib
+    fetch-issues.ts     # GitHub API integration
+/public
+  issues.json           # Fallback data for local dev
 ```
 
-**That's it!** The app will automatically use the pre-populated data in `public/issues.json` and `public/last-update.json` when no KV credentials are found.
+**Data Flow:**
+1. Cron job fetches issues from GitHub API (configured repos in `fetch-issues.ts`)
+2. Stores in Vercel KV for production
+3. Client fetches via `/api/get-issues`
+4. Filters and sorts client-side for instant UX
 
-### Optional: Environment Configuration
+---
 
-If you want to customize your local setup, copy the example environment file:
+## Local Development
 
 ```bash
-cp .env.example .env.local
+pnpm install
+pnpm dev
 ```
 
-Edit `.env.local` to configure:
-- `USE_LOCAL_DATA=true` — Force local file mode (even if KV vars are present)
-- `GITHUB_TOKEN` — (Optional) Increase GitHub API rate limits from 60 to 5,000 requests/hour
+No environment variables required. The app automatically uses `public/issues.json` when KV is not configured.
 
-### How It Works
+### Optional Configuration
 
-The app intelligently falls back to local data:
+Create `.env.local`:
 
-1. **When KV is configured** (production): Reads issues from Vercel KV store
-2. **When KV is NOT configured** (local dev): Reads issues from `public/issues.json`
-3. **On KV error**: Automatically falls back to local files
+```bash
+# Force local file mode (even if KV vars present)
+USE_LOCAL_DATA=true
 
-This means contributors can:
-- Run the app locally without any secrets ✅
-- Test UI changes and filters ✅
-- Add new features without production access ✅
+# Increase GitHub API rate limits (optional)
+GITHUB_TOKEN=your_github_token
+```
 
-### Updating the Issue List (Optional)
+---
 
-To fetch fresh issues from GitHub (requires no secrets, but rate-limited):
+## Contributing
+
+### Adding Repositories
+
+Edit `src/lib/fetch-issues.ts`:
+
+```typescript
+const REPOS = [
+  { 
+    owner: "organization", 
+    repo: "repository", 
+    label: "good first issue", 
+    tags: ["language", "category", "ecosystem"] 
+  },
+  // Add your repo here
+];
+```
+
+Tags map to:
+- **Languages** – javascript, python, rust, go, etc.
+- **Industries** – blockchain, frontend, backend, security, etc.
+- **Types** – Inferred from issue labels
+
+### Updating Issues Locally
 
 ```bash
 pnpm run update-issues
 ```
 
-## 🚀 Deployment
+This fetches fresh issues from GitHub and saves to `public/issues.json`.
 
-This project is configured for deployment on Vercel. To deploy:
+### Project Structure Changes
 
-1. Push your code to a GitHub repository.
-2. Import the repository on [Vercel](https://vercel.com).
-3. Connect a Vercel KV store to your project for storing fetched issues and timestamps.
-4. Vercel will automatically detect the Next.js configuration.
-5. Your site will be deployed and available at your Vercel URL.
-
-## Environment Variables
-
-### For Local Development (Optional)
-
-See `.env.example` for all available options. Most common:
-
-- `USE_LOCAL_DATA=true` — Force use of local JSON files instead of KV (default behavior when KV is not configured)
-- `GITHUB_TOKEN` — (Optional) Increase GitHub API rate limits when fetching issues
-
-### For Production Deployment
-
-The following environment variables need to be set in your Vercel project (Settings > Environment Variables):
-
-- `CRON_SECRET` — A secret key to secure the cron job API endpoint (used in `Authorization: Bearer <secret>` header)
-- `GITHUB_TOKEN` — (Optional, but Recommended) GitHub personal access token to increase rate limits
-- Vercel KV Environment Variables — When you connect a Vercel KV store, Vercel automatically adds: `KV_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`
-
-## Cron Job (Production)
-
-This project includes a cron job that automatically updates the GitHub issues in production:
-
-1. Configured in `vercel.json` to run on a schedule (e.g., daily)
-2. Calls the `/api/cron/update-issues` endpoint
-3. Fetches the latest 'good first issues' from various repositories using the GitHub API
-4. Saves the fetched issues to Vercel KV store (key: `all_issues_data`)
-5. Saves the update timestamp to Vercel KV (key: `last_cron_update_timestamp`)
-
-### API Routes
-
-- `/api/get-issues` — Retrieves issues from KV (production) or `public/issues.json` (local/fallback)
-- `/api/get-last-update` — Retrieves update timestamp from KV (production) or `public/last-update.json` (local/fallback)
-
-Both routes automatically fall back to local JSON files when Vercel KV is unavailable, ensuring the app works seamlessly in local development.
+- **Filters** – Edit `src/app/page.tsx` (issue types, languages, industries)
+- **Quest Cards** – Edit `src/components/quests/QuestCard.tsx`
+- **Type Mappings** – Edit `src/types/quest.ts` (add fields to Quest interface)
+- **Styling** – Tailwind classes throughout, config in `tailwind.config.ts`
 
 ---
 
-## 🌟 Spread the Word
+## Deployment
 
-If this project helps you (or you just think it's cool):
+### Vercel (Production)
 
-- ⭐️ Star this repo
-- 📢 Share it on social media
-- 🗣️ Tell a friend who wants to break into blockchain
+1. Import repository on [Vercel](https://vercel.com)
+2. Connect a Vercel KV store for issue caching
+3. Add environment variables:
+   - `CRON_SECRET` – Secures the cron endpoint
+   - `GITHUB_TOKEN` – (Optional) Increases API rate limits
+4. KV variables are added automatically by Vercel
 
-Together, we're lowering the barrier to Web3 — one good first issue at a time.
+The cron job (`vercel.json`) updates issues automatically.
 
 ---
 
-Made with ❤️ by open-source contributors across the globe.
+## Tech Stack
 
+- **Next.js 15** – App router, server components
+- **Vercel KV** – Redis-based issue cache
+- **shadcn/ui** – Component library
+- **Tailwind CSS** – Styling
+- **TypeScript** – Type safety
+
+---
+
+## License
+
+MIT
+
+---
+
+Built with care by [Lucci Labs](https://luccilabs.xyz) | [Discord](https://discord.gg/MWxWzRVSx) | [X](https://x.com/LucciLabs)
