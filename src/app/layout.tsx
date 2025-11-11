@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
+import Image from 'next/image'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
@@ -34,11 +36,11 @@ export default function RootLayout({
           <nav className="border-b border-border/40 sticky top-0 z-50 bg-background/95 backdrop-blur">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-between h-14 items-center">
-                <a href="/" className="flex items-center gap-2">
-                  <img src="/favicon.ico" alt="Lucci" className="h-6" />
-                  <img src="/logo-dark.svg" alt="Lucci" className="h-6 dark:hidden" />
-                  <img src="/logo-light.svg" alt="Lucci" className="h-6 hidden dark:block" />
-                </a>
+                <Link href="/" className="flex items-center gap-2">
+                  <Image src="/favicon.ico" alt="Lucci" width={24} height={24} className="h-6 w-6" />
+                  <Image src="/logo-dark.svg" alt="Lucci" width={80} height={24} className="h-6 dark:hidden" priority />
+                  <Image src="/logo-light.svg" alt="Lucci" width={80} height={24} className="h-6 hidden dark:block" priority />
+                </Link>
                 <div className="flex items-center gap-4">
                   <a
                     href="https://luccilabs.xyz"
